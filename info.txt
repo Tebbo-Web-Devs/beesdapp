@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
+import "@openzeppelin/contracts@4.7.0/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts@4.7.0/access/Ownable.sol";
+import "@openzeppelin/contracts@4.7.0/utils/Counters.sol";
+
+contract SaveTheBees is ERC721, Ownable {
+    using Counters for Counters.Counter;
+
+    Counters.Counter private _tokenIdCounter;
+
+    constructor() ERC721("Save the Bees", "STB") {}
+
+    function _baseURI() internal pure override returns (string memory) {
+        return "ipfs://bafybeiejgzbveiytwskwkmu6eg47zhd7bnh6v5nxpiyynthulfwsfsou4u/";
+    }
+
+    function safeMint(address to) public onlyOwner {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(to, tokenId);
+    }
+}
+
+address rinkeby = 0xAD84D56BB6d39D78F0D25C7068020932b48f00C5

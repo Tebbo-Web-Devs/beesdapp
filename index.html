@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>Save the Bees</title>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <img class="logo" src="https://images.cooltext.com/5610383.png" width="488" height="88"
+                alt="Save the Bees" />
+        </div>
+        <row class="row">
+            <col className="imageHolder">
+            <img class="bee" src="./images/thumbsupBee.webp" alt="Bee" />
+            </col>
+            <col class="details">
+            <div class="minter">
+                <h1>Simple Minting Dapp Demo</h1>
+                <p>Cost: FREE!</p>
+                <p id="addr"></p>
+                <p>Network : Rinkeby</p>
+
+            </div>
+            </col>
+        </row>
+        <button id="mint" onclick="Mint()">Mint for Free</button>
+        <div class="webLink">
+            <a style="color: rgb(248, 98, 38)" href="https://linktr.ee/tebbo" target="_blank">Get in Touch</a>
+        </div>
+    </div>
+    <script type="module" src="./index.js"></script>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+
+    <script>
+        const contractAddress = "0xAD84D56BB6d39D78F0D25C7068020932b48f00C5";
+        document.getElementById("addr").innerHTML = "Contract Address: " + contractAddress;
+
+
+        const Abi = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "to",
+                        "type": "address"
+                    }
+                ],
+                "name": "safeMint",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ]
+        async function Connect() {
+            if (!window.ethereum) {
+                alert("Please install a Web3 wallet to use this site!")
+            }
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const accounts = await provider.send("eth_requestAccounts", []);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(contractAddress, Abi, provider);
+            console.log("Account ", accounts[0]);
+            console.log('contract ', contract);
+        }
+        Connect();
+
+        async function Mint() {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const accounts = await provider.send("eth_requestAccounts", []);
+            const contract = new ethers.Contract(contractAddress, Abi, provider);
+            const signer = provider.getSigner();
+            const withSigner = contract.connect(signer);
+            withSigner.safeMint(accounts[0]);
+            console.log(withSigner)
+        }
+    </script>
+</body>
+
+</html>
